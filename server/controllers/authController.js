@@ -1,7 +1,8 @@
 const mongoose = require ('mongoose');
 const { restart } = require('nodemon');
-const user = mongoose.model('User');
-const passport = require ('passport';)
+const User = mongoose.model('User');
+const passport = require ('passport');
+
 
 exports.validateSignup = (req, res, next) => {
     req.sanitizeBody('name'),
@@ -25,7 +26,7 @@ exports.validateSignup = (req, res, next) => {
       req.checkBody('password', 'Password must be between 4 and 10 character').isLength({min: 4, max: 10});
 
       //check for errors and send first error
-      const errors = req.valdiationErrors();
+      const errors = req.validationErrors();
       if(errors) {
           const firstError = errors.map(error => error.msg)[0];
           return res.status(400).send(firstError);
@@ -33,14 +34,14 @@ exports.validateSignup = (req, res, next) => {
       next();
 };
 
-exports.signup = (req, res) => {
+exports.signup = async (req, res) => {
     const { name, email, password } = req.body;
     const user = await new User ({ name, email, password })
-    await User.registrer(user, password, (err, user) => {
+     await User.register(user, password, (err, user) => {
         if (err) {
             return res.status(500).send(err.message);
         }
-        res.json(user);
+        res.json(user.name);
     });
 };
 
@@ -63,6 +64,15 @@ exports.signin = (req, res, next) => {
     })(req, res, next);
 };
 
-exports.signout = () => {};
+exports.signout = (req, res) => {
+    res.clearCookie("next-cookie.sid")
+    req.logout()
+    res.json({ message: "You are now signed out!" });
+};
 
-exports.checkAuth = () => {};
+exports.checkAuth = (req, res, next) => {
+    if (req.isAuthenticated()) {
+        return next();
+    }
+    res.redirect('/signin')
+};
