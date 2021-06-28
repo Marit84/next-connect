@@ -92,7 +92,9 @@ exports.deleteUser = async (req, res ) => {
     const { userId } = req.params;
 
     if(!res.isAuthUser) {
-        return res.status(400).json({message: "You are not authorized to perform this action"})
+        return res.status(400).json({
+            message: "You are not authorized to perform this action"
+        })
     }
     const deletedUser = await User.findOneAndDelete({ _id: userId })
     res.json(deletedUser)
