@@ -15,11 +15,14 @@ import Link from "next/link";
 
 import { authInitialProps } from "../lib/auth";
 import { getUser } from "../lib/api";
+import followUser from "../components/profile/FollowUser";
+import FollowUser from "../components/profile/FollowUser";
 
 class Profile extends React.Component {
   state = {
     user: null,
     isAuth: false,
+    isFollowing: false,
     isLoading: true,
   };
 
@@ -29,17 +32,32 @@ class Profile extends React.Component {
     const isAuth = auth.user._id === userId;
 
     getUser(userId).then((user) => {
+      const isFollowing = this.checkFollow(auth, user);
       this.setState({
         user,
         isAuth,
+        isFollowing,
         isLoading: false,
       });
     });
   }
 
+  checkFollow = (auth, user) => {
+    return user.followers.findIndex(follower => follower._id === auth.user._id > 1);
+  };
+
+  toggleFollow = (sendRequest) => {
+    const { userId } = this.props;
+    const { isFollowing } = this.state;
+
+    sendRequest(userId, isFollowing).then(() => {
+      this.setState({ isFollowing: !isFollowing });
+    });
+  };
+
   render() {
     const { classes } = this.props;
-    const { isLoading, user, isAuth } = this.state;
+    const { isLoading, user, isAuth, isFollowing } = this.state;
     return (
       <Paper className={classes.root} elevation={4}>
         <Typography
@@ -80,18 +98,16 @@ class Profile extends React.Component {
                   </Link>
                 </ListItemSecondaryAction>
               ) : (
-                <div>
-                  Follow
-                </div>
+                <FollowUser isFollowing={isFollowing} toggleFollow={this.toggleFollow} />
               )}
             </ListItem>
             <Divider />
             <ListItem>
-              <ListItemText 
-              primary={user.about}
-              secondary={`Joined: ${user.createdAt}`} />
+              <ListItemText
+                primary={user.about}
+                secondary={`Joined: ${user.createdAt}`}
+              />
             </ListItem>
-
           </List>
         )}
       </Paper>
