@@ -6,7 +6,6 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Delete from "@material-ui/icons/Delete";
-
 import { signoutUser } from "../../lib/auth";
 import { deleteUser } from "../../lib/api";
 
