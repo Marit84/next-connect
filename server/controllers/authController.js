@@ -1,5 +1,4 @@
 const mongoose = require ('mongoose');
-const { restart } = require('nodemon');
 const User = mongoose.model('User');
 const passport = require ('passport');
 
@@ -74,5 +73,5 @@ exports.checkAuth = (req, res, next) => {
     if (req.isAuthenticated()) {
         return next();
     }
-    res.redirect('/signin')
+    res.redirect('/signin');
 };

@@ -17,7 +17,7 @@ exports.getAuthUser = (req, res) => {
         });
         return res.redirect('/signin');
     }
-    res.json(req.user)
+    res.json(req.user);
 };
 
 exports.getUserById = async (req, res, next, id) => {
@@ -26,7 +26,7 @@ exports.getUserById = async (req, res, next, id) => {
 
     const profileId = mongoose.Types.ObjectId(req.profile._id)
 
-    if(req.user && profileId.equals(req.user._id)) {
+    if (req.user && profileId.equals(req.user._id)) {
         req.isAuthUser = true;
         return next();
     }
@@ -91,13 +91,13 @@ exports.updateUser = async (req, res) => {
 exports.deleteUser = async (req, res ) => {
     const { userId } = req.params;
 
-    if(!res.isAuthUser) {
+    if (!req.isAuthUser) {
         return res.status(400).json({
             message: "You are not authorized to perform this action"
-        })
+        });
     }
     const deletedUser = await User.findOneAndDelete({ _id: userId })
-    res.json(deletedUser)
+    res.json(deletedUser);
 };
 
 exports.addFollowing = async (req, res, next) => {
