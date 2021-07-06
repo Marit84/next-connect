@@ -18,7 +18,7 @@ class Post extends React.Component {
   state = {};
 
   render() {
-const { classes, post, auth, isDeletingPost, handleDeletePost } = this.props;
+const { classes, post, auth, isDeletingPost, handleDeletePost, handleToggleLike } = this.props;
 const isPostCreator = post.postedBy._id === auth.user._id;
 
 
@@ -32,6 +32,9 @@ const isPostCreator = post.postedBy._id === auth.user._id;
             <IconButton
             disabled={isDeletingPost}
             onClick={() => handleDeletePost(post)}>
+
+              {/*TO_DO: add a delete-dialog */}
+
               <DeleteTwoTone color="secondary" />
             </IconButton>
           )
@@ -56,7 +59,7 @@ const isPostCreator = post.postedBy._id === auth.user._id;
 
         {/*post actions */}
         <CardActions>
-          <IconButton className={classes.button}>
+          <IconButton onClick={() => handleToggleLike(post)}className={classes.button}>
 <Badge badgeContent={0} color="secondary">
   <FavoriteBorder className={classes.favoriteIcon} />
 </Badge>
