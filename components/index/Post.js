@@ -18,7 +18,8 @@ class Post extends React.Component {
   state = {};
 
   render() {
-const { classes, post, auth } = this.props;
+const { classes, post, auth, isDeletingPost, handleDeletePost } = this.props;
+const isPostCreator = post.postedBy._id === auth.user._id;
 
 
     return (
@@ -26,6 +27,15 @@ const { classes, post, auth } = this.props;
         {/*POST HEADER*/}
         <CardHeader
         avatar={<Avatar src={post.postedBy.avatar} />}
+        action={
+          isPostCreator && (
+            <IconButton
+            disabled={isDeletingPost}
+            onClick={() => handleDeletePost(post)}>
+              <DeleteTwoTone color="secondary" />
+            </IconButton>
+          )
+        }
         title={<Link href={`/profile/${post.postedBy._id}`}>
         <a>{post.postedBy.name}</a></Link>}
         subheader={post.createdAt}
