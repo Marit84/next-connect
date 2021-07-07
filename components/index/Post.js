@@ -14,7 +14,10 @@ import FavoriteBorder from "@material-ui/icons/FavoriteBorder";
 import withStyles from "@material-ui/core/styles/withStyles";
 import Link from "next/link";
 
-class Post extends React.Component {
+import Comments from "./Comments";
+
+//PureComponent makes only the component being updated rerender, while Component makes all components in feed rerender
+class Post extends React.PureComponent {
   state = {
     isLiked : false,
     numLikes : 0,
@@ -100,6 +103,11 @@ const isPostCreator = post.postedBy._id === auth.user._id;
         <Divider />
 
         {/*comment area */}
+        <Comments 
+        auth={auth}
+        postId={post._id}
+        comments={comments}
+        />
       </Card>
     )
   }
