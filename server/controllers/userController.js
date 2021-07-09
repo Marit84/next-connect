@@ -125,8 +125,8 @@ exports.deleteFollowing = async (req, res, next) => {
     const { followId } = req.body;
 
     await User.findOneAndUpdate(
-        { _id: followId },
-        { $pull: { followers: req.user._id } },
+        { _id: req.user._id },
+        { $pull: { following: followId } },
     );
     next();
 };

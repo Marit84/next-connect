@@ -11,26 +11,31 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import Divider from "@material-ui/core/Divider";
 import Edit from "@material-ui/icons/Edit";
 import withStyles from "@material-ui/core/styles/withStyles";
+import format from "date-fns/format";
 import Link from "next/link";
 
 import ProfileTabs from "../components/profile/ProfileTabs";
 import { authInitialProps } from "../lib/auth";
-import { getUser, getPostsByUser, deletePost,
+import {
+  getUser,
+  getPostsByUser,
+  deletePost,
   likePost,
   unlikePost,
   addComment,
-  deleteComment } from "../lib/api";
+  deleteComment,
+} from "../lib/api";
 import FollowUser from "../components/profile/FollowUser";
 import DeleteUser from "../components/profile/DeleteUser";
 
 class Profile extends React.Component {
   state = {
     user: null,
-    posts : [],
+    posts: [],
     isAuth: false,
     isFollowing: false,
     isLoading: true,
-    isDeletingPost: false
+    isDeletingPost: false,
   };
 
   componentDidMount() {
@@ -38,9 +43,9 @@ class Profile extends React.Component {
 
     const isAuth = auth.user._id === userId;
 
-    getUser(userId).then(async user => {
+    getUser(userId).then(async (user) => {
       const isFollowing = this.checkFollow(auth, user);
-      const posts = await getPostsByUser(userId)
+      const posts = await getPostsByUser(userId);
       this.setState({
         user,
         posts,
@@ -52,7 +57,9 @@ class Profile extends React.Component {
   }
 
   checkFollow = (auth, user) => {
-    return user.followers.findIndex(follower => follower._id === auth.user._id > 1);
+    return user.followers.findIndex(
+      (follower) => follower._id === auth.user._id > 1
+    );
   };
 
   toggleFollow = (sendRequest) => {
@@ -139,9 +146,13 @@ class Profile extends React.Component {
       .catch((err) => console.error(err));
   };
 
+  formatDate = date => format(date, "dddd, MMMM Do, YYYY");
+  //Tuesday, November, 6th, 2021
+
   render() {
     const { classes, auth } = this.props;
-    const { isLoading, user, posts, isAuth, isFollowing, isDeletingPost } = this.state;
+    const { isLoading, user, posts, isAuth, isFollowing, isDeletingPost } =
+      this.state;
     return (
       <Paper className={classes.root} elevation={4}>
         <Typography
@@ -180,31 +191,34 @@ class Profile extends React.Component {
                       </IconButton>
                     </a>
                   </Link>
-                  <DeleteUser user={user}/>
+                  <DeleteUser user={user} />
                 </ListItemSecondaryAction>
               ) : (
-                <FollowUser isFollowing={isFollowing} toggleFollow={this.toggleFollow} />
+                <FollowUser
+                  isFollowing={isFollowing}
+                  toggleFollow={this.toggleFollow}
+                />
               )}
             </ListItem>
             <Divider />
             <ListItem>
               <ListItemText
                 primary={user.about}
-                secondary={`Joined: ${user.createdAt}`}
+                secondary={`Joined: ${this.formatDate(user.createdAt)}`}
               />
             </ListItem>
 
             {/* Display Users post's, following and followers */}
             <ProfileTabs
-           
-            auth={auth}
-            posts={posts}
-            isDeletingPost={isDeletingPost}
-            handleDeletePost={this.handleDeletePost}
-            handleToggleLike={this.handleToggleLike}
-            handleAddComment={this.handleAddComment}
-            handleDeleteComment={this.handleDeleteComment}
-          />
+              user={user}
+              auth={auth}
+              posts={posts}
+              isDeletingPost={isDeletingPost}
+              handleDeletePost={this.handleDeletePost}
+              handleToggleLike={this.handleToggleLike}
+              handleAddComment={this.handleAddComment}
+              handleDeleteComment={this.handleDeleteComment}
+            />
           </List>
         )}
       </Paper>
