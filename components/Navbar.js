@@ -30,19 +30,19 @@ const Navbar = ({ classes, router, pageProps: { auth } }) => {
 
         {user._id ? (
           // auth navigation
-          <div>
-            <Button>
+          <div className={classes.navButtons}>
+            <Button className={classes.navButton}>
               <ActiveLink href={`/profile/${user._id}`}>Profile</ActiveLink>
             </Button>
-            <Button onClick={signoutUser} variant="outlined">Sign out</Button>
+            <Button className={classes.navButton} onClick={signoutUser} variant="outlined">Sign out</Button>
           </div>
         ) : (
           // unAuth navigation
-          <div>
-            <Button>
+          <div className={classes.navButtons}>
+            <Button className={classes.navButton}>
               <ActiveLink href="/signin">Sign in</ActiveLink>
             </Button>
-            <Button>
+            <Button className={classes.navButton}>
               <ActiveLink href="/signup">Sign up</ActiveLink>
             </Button>
           </div>
@@ -56,12 +56,21 @@ const styles = (theme) => ({
   appBar: {
     // z-index 1 higher than the fixed drawer in home page to clip it under the navigation
     zIndex: theme.zIndex.drawer + 1,
+
   },
   toolbarTitle: {
     flex: 1,
   },
   icon: {
     marginRight: theme.spacing.unit,
+  },
+  navButtons: {
+flex: 1,
+
+ },
+  navButton: {
+    float: 'right',
+    marginLeft: theme.spacing.unit,
   },
 });
 
