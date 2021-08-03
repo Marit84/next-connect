@@ -34,7 +34,9 @@ const userSchema = new mongoose.Schema(
     followers: [{ type: ObjectId, ref: "User" }]
   },
   /* gives us "createdAt" and "updatedAt" fields automatically */
-  { timestamps: true }
+  { timestamps: true },
+  /*diable buffering - By default, mongoose buffers commands when the connection goes down until the driver manages to reconnect*/
+  { bufferCommands: false }
 );
 
 const autoPopulateFollowingAndFollowers = function(next) {
